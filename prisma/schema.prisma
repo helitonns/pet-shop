@@ -8,7 +8,6 @@ datasource db {
 }
 
 //---------------------------------------------
-
 model Appointment {
   id String @id @default(cuid())
   tutorName String
