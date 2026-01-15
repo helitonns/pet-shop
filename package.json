@@ -6,9 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint",
-    "format": "prettier --check .",
-    "validate:typecheck": "tsc --noEmit --skipLibCheck"
+    "lint": "eslint"
   },
   "dependencies": {
     "next": "16.1.2",
