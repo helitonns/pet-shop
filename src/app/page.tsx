@@ -39,7 +39,7 @@ const appointments = [
 
 const getPeriod = (hour: number): AppointmentPeriodDay => {
   if (hour >= 9 && hour < 12) return "morning";
-  if (hour >= 12 && hour < 18) return "afternoon";
+  if (hour >= 13 && hour < 18) return "afternoon";
   return "evening";
 };
 
@@ -52,7 +52,7 @@ function groupAppointmentByPeriod(appointments: AppointmentPrisma[]): Appointmen
       minute: "2-digit"
     }),
     service: item.description,
-    period: getPeriod(item.scheduleAt.getTime())
+    period: getPeriod(item.scheduleAt.getHours())
   }));
 
   const morningAppointments = transformedAppointments.filter((apt) => apt.period === "morning");
