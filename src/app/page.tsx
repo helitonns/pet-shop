@@ -26,7 +26,10 @@ export default async function Home() {
         ))}
       </div>
 
-      <div>
+      <div className="
+        fixed bottom-0 left-0 right-0 flex justify-center bg-background-tertiary py-4.5 px-6
+        md:botton-6 md:right-6 md:left-auto md:top-auto md:w-auto md:bg-transparent md:p-0 md:mt-4 md:mb-4"
+      >
         <AppointmentForm />
       </div>
     </div>
