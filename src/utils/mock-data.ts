@@ -1,4 +1,4 @@
-export const appointments = [
+export const APPONITMENTS_DATA = [
   {
     id: '1',
     petName: 'Rex',
