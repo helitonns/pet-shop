@@ -1,5 +1,6 @@
 import { AppointmentPeriod } from "@/types/appointments";
 import { CloudSun, MoonStar, Sun } from "lucide-react";
+import { AppointmentCard } from "../appointment-card";
 
 const periodIcons = {
   morning: <Sun className="text-accent-blue" />,
@@ -32,9 +33,7 @@ export function PeriodSection({ period }: PeriodSectionProps) {
               <div className="text-right">Paciente</div>
             </div>
             {period.appointments.map((app, index) => (
-              <div key={`appointments-${index}`}>
-                {app.petName}
-              </div>
+              <AppointmentCard appointment={app} key={`appointments-${index}`} />
             ))}
           </div>
         </div>
