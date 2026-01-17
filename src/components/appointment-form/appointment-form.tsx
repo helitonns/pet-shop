@@ -4,18 +4,25 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Dog, Phone, User } from "lucide-react";
+import { format, startOfToday } from "date-fns";
+import { CalendarIcon, ChevronDownIcon, Dog, Phone, User } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { IMaskInput } from "react-imask";
 import z from "zod";
+import { Calendar } from "../ui/calendar";
 
 const appointmentFormSchema = z.object({
   tutorName: z.string().min(3, "O nome do tutor deve ter no mínimo 3 caracteres"),
   petName: z.string().min(3, "O nome do pet deve ter no mínimo 3 caracteres"),
   phone: z.string().min(11, "O telefone deve ter no mínimo 11 carcteres"),
   description: z.string().min(3, "A descrição deve ter no mínimo 3 carcteres"),
+  scheduleAt: z.date({
+    error: "Escolha uma data válida"
+  }).min(startOfToday(), { message: "Só é permitido agendamentos futuros" })
 });
 
 type AppointmentFormValues = z.infer<typeof appointmentFormSchema>;
@@ -28,6 +35,7 @@ export function AppointmentForm() {
       petName: "",
       phone: "",
       description: "",
+      scheduleAt: undefined,
     }
   });
 
@@ -99,14 +107,51 @@ export function AppointmentForm() {
               </FormItem>
             )} />
 
-
-
             <FormField control={form.control} name="description" render={({ field }) => (
               <FormItem>
                 <FormLabel className="text-label-medium-size text-content-primary">Descrição do serviço</FormLabel>
                 <FormControl>
                   <Textarea placeholder="Descrição do serviçor" className="resize-none" {...field} />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )} />
+
+            <FormField control={form.control} name="scheduleAt" render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel className="text-label-medium-size text-content-primary">Data</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        className={cn("w-full justify-between text-left font-normal bg-background-tertiary border-border-primar text-content-primary hover:bg-background-tertiary hover:border-border-secondary hover:text-content-primary focus-visible:ring-offset-0 focus-visible:ring-1 focus-visible:ring-border-brand focus:border-border-brand focus-visible:border-border-brand", !field.value && "text-content-secondary")}
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <div className="flex items-center gap-2">
+                            <CalendarIcon size={20} className="text-content-brand" />
+                            {field.value ? (
+                              format(field.value, "dd/MM/yyyy")
+                            ) : (
+                              <span>Selecione uma data</span>
+                            )}
+                          </div>
+                          <ChevronDownIcon />
+                        </div>
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) => date < startOfToday()}
+                    />
+                  </PopoverContent>
+                </Popover>
+
                 <FormMessage />
               </FormItem>
             )} />
