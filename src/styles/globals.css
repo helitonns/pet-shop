@@ -67,6 +67,9 @@
 }
 
 :root {
+  --toastify-color-success: #BFF7A3;
+  --toastify-color-error: #FF7081;
+
   --radius: 0.625rem;
   --background: var(--color-background-primary);
   --foreground: var(--color-content-primary);

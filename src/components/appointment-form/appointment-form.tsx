@@ -66,9 +66,10 @@ export function AppointmentForm() {
     });
 
     if (result?.ok) {
-      toast.dark("Agendamento criado com sucesso!");
+      toast.success("Agendamento criado com sucesso!");
+      form.reset();
     } else {
-      toast.dark(result?.error ?? "Agendamento criado com sucesso!");
+      toast.error(result?.error ?? "Agendamento criado com sucesso!");
     }
     console.log(data);
   }

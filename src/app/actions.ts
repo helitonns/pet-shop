@@ -4,11 +4,11 @@ import { prisma } from "@/lib/prisma";
 import z from "zod";
 
 const appointmentSchema = z.object({
-  tutorName: z.string(),
-  petName: z.string(),
+  tutorName: z.string().toUpperCase(),
+  petName: z.string().toUpperCase(),
   phone: z.string(),
-  description: z.string(),
-  scheduleAt: z.coerce.date()
+  description: z.string().toUpperCase(),
+  scheduleAt: z.date()
 });
 
 type AppointmentData = z.infer<typeof appointmentSchema>;
@@ -39,7 +39,7 @@ export async function createAppointment(data: AppointmentData) {
     if (existingAppointment) {
       return {
         ok: false,
-        error: `Este horário (${hour}) já está reservado`
+        error: "Este horário já está reservado"
       }
     }
 
@@ -49,7 +49,7 @@ export async function createAppointment(data: AppointmentData) {
       }
     });
 
-    return { ok: true};
+    return { ok: true };
   } catch (error) {
     console.log(error);
   }

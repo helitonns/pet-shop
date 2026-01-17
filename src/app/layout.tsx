@@ -35,7 +35,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           pauseOnFocusLoss
           draggable
           pauseOnHover
-          theme="light"
+          theme="dark"
+          
         />
       </body>
     </html>
