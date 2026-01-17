@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -8,12 +9,11 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format, startOfToday } from "date-fns";
+import { format, setHours, setMinutes, startOfToday } from "date-fns";
 import { CalendarIcon, ChevronDownIcon, Dog, Phone, User } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { IMaskInput } from "react-imask";
 import z from "zod";
-import { Calendar } from "../ui/calendar";
 
 const appointmentFormSchema = z.object({
   tutorName: z.string().min(3, "O nome do tutor deve ter no mínimo 3 caracteres"),
@@ -22,7 +22,19 @@ const appointmentFormSchema = z.object({
   description: z.string().min(3, "A descrição deve ter no mínimo 3 carcteres"),
   scheduleAt: z.date({
     error: "Escolha uma data válida"
-  }).min(startOfToday(), { message: "Só é permitido agendamentos futuros" })
+  }).min(startOfToday(), { message: "Só é permitido agendamentos futuros" }),
+  time: z.string().min(1, "Hora obrigatória")
+}).refine((data) => {
+  const [hour, minute] = data.time.split(":");
+  const scheduleDateTime = setMinutes(
+    setHours(data.scheduleAt, Number(hour)),
+    Number(minute)
+  );
+
+  return scheduleDateTime > new Date();
+}, {
+  path: ["time"],
+  error: "Só é permitido agendamentos futuros"
 });
 
 type AppointmentFormValues = z.infer<typeof appointmentFormSchema>;
@@ -156,6 +168,16 @@ export function AppointmentForm() {
               </FormItem>
             )} />
 
+            <FormField control={form.control} name="time" render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-label-medium-size text-content-primary">Descrição do serviço</FormLabel>
+                <FormControl>
+                  <Textarea placeholder="Descrição do serviçor" className="resize-none" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )} />
+
 
             <Button type="submit" variant="brand" className="mt-8">Salvar</Button>
           </form>
@@ -164,3 +186,21 @@ export function AppointmentForm() {
     </Dialog>
   );
 }
+
+const generateTimeOptions = (): string[] => {
+  const times = [];
+
+  for (let hour = 9; hour <= 21; hour++) {
+    for (let minute = 0; minute < 60; minute += 30) {
+      if (hour === 21 && minute > 0) break;
+
+      const timeString = `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
+      times.push(timeString);
+
+    }
+  }
+
+  return times;
+}
+
+const TIME_OPTIONS = generateTimeOptions();
