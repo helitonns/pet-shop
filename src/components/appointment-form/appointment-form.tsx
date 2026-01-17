@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, setHours, setMinutes, startOfToday } from "date-fns";
 import { CalendarIcon, ChevronDownIcon, Clock, Dog, Loader2, Phone, User } from "lucide-react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { IMaskInput } from "react-imask";
 import { toast } from "react-toastify";
@@ -43,6 +44,8 @@ const appointmentFormSchema = z.object({
 type AppointmentFormValues = z.infer<typeof appointmentFormSchema>;
 
 export function AppointmentForm() {
+  const [isOpen, setIsOpen] = React.useState(false);
+
   const form = useForm<AppointmentFormValues>({
     resolver: zodResolver(appointmentFormSchema),
     defaultValues: {
@@ -68,6 +71,7 @@ export function AppointmentForm() {
     if (result?.ok) {
       toast.success("Agendamento criado com sucesso!");
       form.reset();
+      setIsOpen(false);
     } else {
       toast.error(result?.error ?? "Agendamento criado com sucesso!");
     }
@@ -75,7 +79,7 @@ export function AppointmentForm() {
   }
 
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="brand">Novo Agendamento</Button>
       </DialogTrigger>
