@@ -14,6 +14,7 @@ import { format, setHours, setMinutes, startOfToday } from "date-fns";
 import { CalendarIcon, ChevronDownIcon, Clock, Dog, Loader2, Phone, User } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { IMaskInput } from "react-imask";
+import { toast } from "react-toastify";
 import z from "zod";
 
 const appointmentFormSchema = z.object({
@@ -54,6 +55,11 @@ export function AppointmentForm() {
   });
 
   function onSubmit(data: AppointmentFormValues) {
+    const [hour, minute] = data.time.split(":");
+    const scheduleAt = new Date(data.scheduleAt);
+    scheduleAt.setHours(Number(hour), Number(minute), 0, 0);
+
+    toast.dark("Agendamento criado com sucesso!");
     console.log(data);
   }
 
