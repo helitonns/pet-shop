@@ -1,5 +1,6 @@
 "use client";
 
+import { createAppointment } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -54,12 +55,21 @@ export function AppointmentForm() {
     }
   });
 
-  function onSubmit(data: AppointmentFormValues) {
+  async function onSubmit(data: AppointmentFormValues) {
     const [hour, minute] = data.time.split(":");
     const scheduleAt = new Date(data.scheduleAt);
     scheduleAt.setHours(Number(hour), Number(minute), 0, 0);
 
-    toast.dark("Agendamento criado com sucesso!");
+    const result = await createAppointment({
+      ...data,
+      scheduleAt
+    });
+
+    if (result?.ok) {
+      toast.dark("Agendamento criado com sucesso!");
+    } else {
+      toast.dark(result?.error ?? "Agendamento criado com sucesso!");
+    }
     console.log(data);
   }
 
