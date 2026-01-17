@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, setHours, setMinutes, startOfToday } from "date-fns";
-import { CalendarIcon, ChevronDownIcon, Clock, Dog, Phone, User } from "lucide-react";
+import { CalendarIcon, ChevronDownIcon, Clock, Dog, Loader2, Phone, User } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { IMaskInput } from "react-imask";
 import z from "zod";
@@ -49,6 +49,7 @@ export function AppointmentForm() {
       phone: "",
       description: "",
       scheduleAt: undefined,
+      time: "",
     }
   });
 
@@ -130,71 +131,79 @@ export function AppointmentForm() {
               </FormItem>
             )} />
 
-            <FormField control={form.control} name="scheduleAt" render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel className="text-label-medium-size text-content-primary">Data</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        className={cn("w-full justify-between text-left font-normal bg-background-tertiary border-border-primar text-content-primary hover:bg-background-tertiary hover:border-border-secondary hover:text-content-primary focus-visible:ring-offset-0 focus-visible:ring-1 focus-visible:ring-border-brand focus:border-border-brand focus-visible:border-border-brand", !field.value && "text-content-secondary")}
-                      >
-                        <div className="flex items-center justify-between w-full">
-                          <div className="flex items-center gap-2">
-                            <CalendarIcon size={20} className="text-content-brand" />
-                            {field.value ? (
-                              format(field.value, "dd/MM/yyyy")
-                            ) : (
-                              <span>Selecione uma data</span>
-                            )}
+            <div className="space-y-4 md:grid md:grid-cols-2 md:gap-4 md:space-y-0">
+              <FormField control={form.control} name="scheduleAt" render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel className="text-label-medium-size text-content-primary">Data</FormLabel>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant="outline"
+                          className={cn("w-full justify-between text-left font-normal bg-background-tertiary border-border-primar text-content-primary hover:bg-background-tertiary hover:border-border-secondary hover:text-content-primary focus-visible:ring-offset-0 focus-visible:ring-1 focus-visible:ring-border-brand focus:border-border-brand focus-visible:border-border-brand", !field.value && "text-content-secondary")}
+                        >
+                          <div className="flex items-center justify-between w-full">
+                            <div className="flex items-center gap-2">
+                              <CalendarIcon size={20} className="text-content-brand" />
+                              {field.value ? (
+                                format(field.value, "dd/MM/yyyy")
+                              ) : (
+                                <span>Selecione uma data</span>
+                              )}
+                            </div>
+                            <ChevronDownIcon />
                           </div>
-                          <ChevronDownIcon />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) => date < startOfToday()}
+                      />
+                    </PopoverContent>
+                  </Popover>
+
+                  <FormMessage />
+                </FormItem>
+              )} />
+
+              <FormField control={form.control} name="time" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-label-medium-size text-content-primary">Hora</FormLabel>
+                  <FormControl>
+                    <Select onValueChange={field.onChange} value={field.value} >
+                      <SelectTrigger>
+                        <div className="flex items-center gap-2">
+                          <Clock size={20} className="text-content-brand" />
+                          <SelectValue placeholder="--:--" />
                         </div>
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
+                      </SelectTrigger>
+                      <SelectContent>
+                        {TIME_OPTIONS.map((time) => (
+                          <SelectItem key={time} value={time}>
+                            {time}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+            </div>
 
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) => date < startOfToday()}
-                    />
-                  </PopoverContent>
-                </Popover>
-
-                <FormMessage />
-              </FormItem>
-            )} />
-
-            <FormField control={form.control} name="time" render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-label-medium-size text-content-primary">Hora</FormLabel>
-                <FormControl>
-                  <Select onValueChange={field.onChange} value={field.value} >
-                    <SelectTrigger>
-                      <div className="flex items-center gap-2">
-                        <Clock size={20} className="text-content-brand" />
-                        <SelectValue placeholder="--:-- --" />
-                      </div>
-                    </SelectTrigger>
-                    <SelectContent>
-                      {TIME_OPTIONS.map((time) => (
-                        <SelectItem key={time} value={time}>
-                          {time}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )} />
-
-
-            <Button type="submit" variant="brand" className="mt-8">Salvar</Button>
+            <div className="flex justify-end">
+              <Button type="submit" variant="brand" className="w-full md:w-min" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting && (
+                  <Loader2 size={16} className="animate-spin" />
+                )}
+                Agendar
+              </Button>
+            </div>
           </form>
         </Form>
       </DialogContent>
