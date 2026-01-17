@@ -6,11 +6,12 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, setHours, setMinutes, startOfToday } from "date-fns";
-import { CalendarIcon, ChevronDownIcon, Dog, Phone, User } from "lucide-react";
+import { CalendarIcon, ChevronDownIcon, Clock, Dog, Phone, User } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { IMaskInput } from "react-imask";
 import z from "zod";
@@ -170,9 +171,23 @@ export function AppointmentForm() {
 
             <FormField control={form.control} name="time" render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-label-medium-size text-content-primary">Descrição do serviço</FormLabel>
+                <FormLabel className="text-label-medium-size text-content-primary">Hora</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Descrição do serviçor" className="resize-none" {...field} />
+                  <Select onValueChange={field.onChange} value={field.value} >
+                    <SelectTrigger>
+                      <div className="flex items-center gap-2">
+                        <Clock size={20} className="text-content-brand" />
+                        <SelectValue placeholder="--:-- --" />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent>
+                      {TIME_OPTIONS.map((time) => (
+                        <SelectItem key={time} value={time}>
+                          {time}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </FormControl>
                 <FormMessage />
               </FormItem>
