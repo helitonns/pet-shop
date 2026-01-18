@@ -1,4 +1,5 @@
 import { AppointmentForm } from "@/components/appointment-form/appointment-form";
+import { DatePicker } from "@/components/date-picker/date-picker";
 import { PeriodSection } from "@/components/period-section";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
@@ -14,12 +15,16 @@ export default async function Home() {
 
   return (
     <div className="bg-background-primary p-6">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col md:flex-row justify-start md:justify-between mb-8">
         <div>
           <h1 className="text-title-size text-content-primary">Sua Agenda</h1>
           <p className="text-paragraph-medium-size text-content-secondary">
             Aqui você pode ver todos os clientes e serviços agendados para hoje.
           </p>
+        </div>
+
+        <div className="flex mt-4 md:mt-0">
+          <DatePicker />
         </div>
       </div>
 
