@@ -4,11 +4,20 @@ import { PeriodSection } from "@/components/period-section";
 import { Button } from "@/components/ui/button";
 import { prisma } from "@/lib/prisma";
 import { groupAppointmentByPeriod } from "@/utils/appointments-utils";
+import { endOfDay, parseISO, startOfDay } from "date-fns";
 
-export default async function Home() {
+export default async function Home({ searchParams }: { searchParams: Promise<{ date?: string }> }) {
+  const { date } = await searchParams;
+  const selectedDate = date ? parseISO(date) : new Date();
   const appointments = await prisma.appointment.findMany({
+    where: {
+      scheduleAt: {
+        gte: startOfDay(selectedDate),
+        lte: endOfDay(selectedDate)
+      }
+    },
     orderBy: {
-      scheduleAt: "desc"
+      scheduleAt: "asc"
     }
   });
   const periods = groupAppointmentByPeriod(appointments);
