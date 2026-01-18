@@ -89,7 +89,6 @@ export function AppointmentForm({ appointment, children }: AppointmentFormProps)
     } else {
       toast.error(result.message);
     }
-    console.log(data);
   }
 
   React.useEffect(() => {

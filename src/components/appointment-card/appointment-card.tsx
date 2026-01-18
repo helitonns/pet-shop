@@ -1,7 +1,12 @@
+"use client";
+import { deleteAppointmet } from "@/app/actions";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Appointment } from "@/types/appointments";
-import { Pen as EditIcon } from "lucide-react";
+import { Trash2 as DeleteIcon, Pen as EditIcon, Loader2 as LoadingIcon } from "lucide-react";
+import React from "react";
+import { toast } from "react-toastify";
 import { AppointmentForm } from "../appointment-form/appointment-form";
 
 type AppointmentCardProps = {
@@ -10,6 +15,22 @@ type AppointmentCardProps = {
 }
 
 export function AppointmentCard({ appointment, isFirstInSection = false }: AppointmentCardProps) {
+  const [isDeleting, setIsDeleting] = React.useState(false);
+
+  async function handleDelete() {
+    setIsDeleting(true);
+
+    const result = await deleteAppointmet(appointment.id);
+
+    if (result.success) {
+      toast.success(result.message);
+    } else {
+      toast.error(result.message);
+      return;
+    }
+
+    setIsDeleting(false);
+  }
 
   return (
     <div className={cn("grid grid-cols-2 md:grid-cols-[15%_35%_30%_20%] items-center py-3", !isFirstInSection && "border-t border-border-divisor")}>
@@ -41,6 +62,30 @@ export function AppointmentCard({ appointment, isFirstInSection = false }: Appoi
             <EditIcon size={16} />
           </Button>
         </AppointmentForm>
+
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button variant="remove" size="icon">
+              <DeleteIcon size={16} />
+            </Button>
+          </AlertDialogTrigger>
+
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Apagar agendamento</AlertDialogTitle>
+              <AlertDialogDescription>Tem cesteza que deseja apagar este agendaento?</AlertDialogDescription>
+            </AlertDialogHeader>
+
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
+              <AlertDialogAction onClick={handleDelete} disabled={isDeleting}>
+                {isDeleting && (
+                  <LoadingIcon size={16} className="animete-spin" />
+                )}Apagar
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </div>
   );

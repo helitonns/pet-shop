@@ -16,7 +16,6 @@ const appointmentSchema = z.object({
 
 type AppointmentData = z.infer<typeof appointmentSchema>;
 
-
 export async function createAppointment(data: AppointmentData): Promise<ServiceResult<Appointment>> {
   try {
     const parseData = appointmentSchema.parse(data);
@@ -56,8 +55,7 @@ export async function createAppointment(data: AppointmentData): Promise<ServiceR
   }
 }
 
-
-export async function updateAppointment(id: string, data: AppointmentData): Promise < ServiceResult < Appointment >> {
+export async function updateAppointment(id: string, data: AppointmentData): Promise<ServiceResult<Appointment>> {
   try {
     const parseData = appointmentSchema.parse(data);
     const { scheduleAt } = parseData;
@@ -99,5 +97,22 @@ export async function updateAppointment(id: string, data: AppointmentData): Prom
   } catch (error) {
     console.log(error);
     return failure("Erro ao salvar agendamento.");
+  }
+}
+
+export async function deleteAppointmet(id: string): Promise<ServiceResult<Appointment>> {
+  try {
+    const deleted = await prisma.appointment.delete({
+      where: {
+        id
+      }
+    });
+
+    revalidatePath("/");
+
+    return success(deleted, "Agendamento apagado com sucesso.");
+  } catch (error) {
+    console.log(error);
+    return failure("Erro ao apagar agendamento.");
   }
 }
