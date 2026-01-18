@@ -5,7 +5,11 @@ import { prisma } from "@/lib/prisma";
 import { groupAppointmentByPeriod } from "@/utils/appointments-utils";
 
 export default async function Home() {
-  const appointments = await prisma.appointment.findMany();
+  const appointments = await prisma.appointment.findMany({
+    orderBy: {
+      scheduleAt: "desc"
+    }
+  });
   const periods = groupAppointmentByPeriod(appointments);
 
   return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { createAppointment } from "@/app/actions";
+import { createAppointment, updateAppointment } from "@/app/actions";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -69,17 +69,25 @@ export function AppointmentForm({ appointment, children }: AppointmentFormProps)
     const scheduleAt = new Date(data.scheduleAt);
     scheduleAt.setHours(Number(hour), Number(minute), 0, 0);
 
-    const result = await createAppointment({
-      ...data,
-      scheduleAt
-    });
+    const isEdit = !!appointment?.id;
 
-    if (result?.ok) {
-      toast.success("Agendamento criado com sucesso!");
+    const result = isEdit ?
+      await updateAppointment(appointment.id, {
+        ...data,
+        scheduleAt
+      })
+      :
+      await createAppointment({
+        ...data,
+        scheduleAt
+      });
+
+    if (result.success) {
+      toast.success(result.message);
       form.reset();
       setIsOpen(false);
     } else {
-      toast.error(result?.error ?? "Agendamento criado com sucesso!");
+      toast.error(result.message);
     }
     console.log(data);
   }
