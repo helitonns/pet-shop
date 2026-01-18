@@ -10,6 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { Appointment } from "@/types/appointments";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { format, setHours, setMinutes, startOfToday } from "date-fns";
 import { CalendarIcon, ChevronDownIcon, Clock, Dog, Loader2, Phone, User } from "lucide-react";
@@ -43,7 +44,12 @@ const appointmentFormSchema = z.object({
 
 type AppointmentFormValues = z.infer<typeof appointmentFormSchema>;
 
-export function AppointmentForm() {
+type AppointmentFormProps = {
+  appointment?: Appointment;
+  children?: React.ReactNode;
+}
+
+export function AppointmentForm({ appointment, children }: AppointmentFormProps) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   const form = useForm<AppointmentFormValues>({
@@ -78,11 +84,17 @@ export function AppointmentForm() {
     console.log(data);
   }
 
+  React.useEffect(() => {
+    form.reset(appointment);
+  }, [appointment, form]);
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button variant="brand">Novo Agendamento</Button>
-      </DialogTrigger>
+      {children && (
+        <DialogTrigger asChild>
+          {children}
+        </DialogTrigger>
+      )}
 
       <DialogContent variant="appointment" overlayVariant="blurred" showCloseButton>
         <DialogHeader>
