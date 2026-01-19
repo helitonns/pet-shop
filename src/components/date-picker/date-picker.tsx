@@ -1,10 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { addDays, format, isValid } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Calendar, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { Calendar as CalendarIcon, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
@@ -40,6 +41,11 @@ export function DatePicker() {
     updateURLWithDate(newDate);
   }
 
+  function handleDateSelect(selectedDate: Date | undefined) {
+    setIsPopoverOpen(false);
+    updateURLWithDate(selectedDate);
+  }
+
   useEffect(() => {
     const newDate = getInicialDate();
 
@@ -65,9 +71,9 @@ export function DatePicker() {
             focus-visible:border-border-brand"
           >
             <div className="flex gap-2 items-center">
-              <Calendar size={16} className="text-content-brand" />
+              <CalendarIcon size={16} className="text-content-brand" />
               {date ? (
-                format(date, "PPP", { locale: ptBR })
+                format(date, "dd/MM/yyyy")
               ) : (
                 <span>Selecione uma data</span>
               )}
@@ -75,6 +81,9 @@ export function DatePicker() {
             <ChevronDown size={16} opacity={50} />
           </Button>
         </PopoverTrigger>
+        <PopoverContent className="w-auto p-0">
+          <Calendar mode="single" selected={date} onSelect={handleDateSelect} autoFocus locale={ptBR} />
+        </PopoverContent>
       </Popover>
 
       <Button variant="outline" onClick={() => handleNavigationDay(1)}>
