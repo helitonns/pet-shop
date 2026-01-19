@@ -16,15 +16,25 @@ const appointmentSchema = z.object({
 
 type AppointmentData = z.infer<typeof appointmentSchema>;
 
+function calculatePeriod(hour: number) {
+  const isMornig = hour >= 9 && hour < 12;
+  const isAfternoon = hour >= 13 && hour < 18;
+  const isEvening = hour >= 19 && hour < 21;
+
+  return {
+    isMornig,
+    isAfternoon,
+    isEvening
+  }
+}
+
 export async function createAppointment(data: AppointmentData): Promise<ServiceResult<Appointment>> {
   try {
     const parseData = appointmentSchema.parse(data);
     const { scheduleAt } = parseData;
     const hour = scheduleAt.getHours();
 
-    const isMornig = hour >= 9 && hour < 12;
-    const isAfternoon = hour >= 13 && hour < 18;
-    const isEvening = hour >= 19 && hour < 21;
+    const { isMornig, isAfternoon, isEvening } = calculatePeriod(hour);
 
     if (!isMornig && !isAfternoon && !isEvening) {
       return failure("Agendamentos só podem ser feitos entre 9 e 12h, 13 e 18h e entre às 19 e 21h.");
@@ -61,9 +71,7 @@ export async function updateAppointment(id: string, data: AppointmentData): Prom
     const { scheduleAt } = parseData;
     const hour = scheduleAt.getHours();
 
-    const isMornig = hour >= 9 && hour < 12;
-    const isAfternoon = hour >= 13 && hour < 18;
-    const isEvening = hour >= 19 && hour < 21;
+    const { isMornig, isAfternoon, isEvening } = calculatePeriod(hour);
 
     if (!isMornig && !isAfternoon && !isEvening) {
       return failure("Agendamentos só podem ser feitos entre 9 e 12h, 13 e 18h e entre às 19 e 21h.");
