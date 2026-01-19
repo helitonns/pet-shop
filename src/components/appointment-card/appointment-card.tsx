@@ -33,7 +33,7 @@ export function AppointmentCard({ appointment, isFirstInSection = false }: Appoi
   }
 
   return (
-    <div className={cn("grid grid-cols-2 md:grid-cols-[15%_35%_30%_20%] items-center py-3", !isFirstInSection && "border-t border-border-divisor")}>
+    <div className={cn("grid grid-cols-2 md:grid-cols-[30%_30%_30%_10%] items-center py-3", !isFirstInSection && "border-t border-border-divisor")}>
       <div className="text-left pr-4 md:pr-0">
         <span className="text-label-small-size text-content-primary font-semibold">{appointment.scheduleAt.toLocaleString("pt-BR", {
           day: "2-digit",

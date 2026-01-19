@@ -2,6 +2,7 @@
 
 import { Appointment } from "@/generated/prisma";
 import { prisma } from "@/lib/prisma";
+import { formatDateTime } from "@/utils/appointments-utils";
 import { revalidatePath } from "next/cache";
 import z from "zod";
 import { failure, ServiceResult, success } from "./service-result";
@@ -32,7 +33,7 @@ export async function createAppointment(data: AppointmentData): Promise<ServiceR
   try {
     const parseData = appointmentSchema.parse(data);
     const { scheduleAt } = parseData;
-    const hour = scheduleAt.getHours();
+    const hour = parseInt(formatDateTime(scheduleAt));
 
     const { isMornig, isAfternoon, isEvening } = calculatePeriod(hour);
 
@@ -69,7 +70,7 @@ export async function updateAppointment(id: string, data: AppointmentData): Prom
   try {
     const parseData = appointmentSchema.parse(data);
     const { scheduleAt } = parseData;
-    const hour = scheduleAt.getHours();
+    const hour = parseInt(formatDateTime(scheduleAt));
 
     const { isMornig, isAfternoon, isEvening } = calculatePeriod(hour);
 

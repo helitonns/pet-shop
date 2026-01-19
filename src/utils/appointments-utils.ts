@@ -11,12 +11,9 @@ export function groupAppointmentByPeriod(appointments: AppointmentPrisma[]): App
 
   const transformedAppointments: Appointment[] = appointments?.map((item) => ({
     ...item,
-    time: item.scheduleAt.toLocaleTimeString("pt-BR", {
-      hour: "2-digit",
-      minute: "2-digit"
-    }),
+    time: formatDateTime(item.scheduleAt),
     service: item.description,
-    period: getPeriod(item.scheduleAt.getHours())
+    period: getPeriod(parseInt(formatDateTime(item.scheduleAt)))
   }));
 
   const morningAppointments = transformedAppointments.filter((apt) => apt.period === "morning");
@@ -43,4 +40,13 @@ export function groupAppointmentByPeriod(appointments: AppointmentPrisma[]): App
       appointments: evenigAppointments
     },
   ]
+}
+
+export function formatDateTime(date: Date): string {
+  return date.toLocaleTimeString("pt-BR", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "America/Sao_Paulo"
+  });
 }
