@@ -67,7 +67,7 @@ export function DatePicker() {
             variant="outline"
             className="w-min[180px] justify-between text-left font-normal bg-transparent 
             border-border-primary text-content-primary hover:bg-background-tertiary 
-            hover:border-border-secondary hover:text-content-primary focus-visible:ring-offset-0 
+            hover:border-border-brand hover:text-content-primary focus-visible:ring-offset-0 
             focus-visible:ring-1 focus-visible:ring-border-brand focus:border-border-brand 
             focus-visible:border-border-brand"
           >

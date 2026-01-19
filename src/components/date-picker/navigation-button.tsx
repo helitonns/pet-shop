@@ -19,7 +19,7 @@ export function NavigationButton({ tooltipText, children, onClick }: NavigationB
             onClick={onClick}
             className="h-12 w-12 bg-transparent border-border-primary text-content-primary 
             hover:bg-background-tertiary 
-            hover:border-border-secondary 
+            hover:border-border-brand 
             hover:text-content-primary 
             focus-visible:ring-offset-0 
             focus-visible:ring-1 
@@ -31,7 +31,7 @@ export function NavigationButton({ tooltipText, children, onClick }: NavigationB
             {children}
           </Button>
         </TooltipTrigger>
-        <TooltipContent className="bg-background-primary" side="top">
+        <TooltipContent className="bg-background-brand" side="top">
           <p>{tooltipText}</p>
         </TooltipContent>
       </Tooltip>
