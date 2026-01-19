@@ -8,6 +8,7 @@ import { ptBR } from "date-fns/locale";
 import { Calendar as CalendarIcon, ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { NavigationButton } from "./navigation-button";
 
 export function DatePicker() {
   const router = useRouter();
@@ -56,9 +57,9 @@ export function DatePicker() {
 
   return (
     <div className="flex items-center gap-2">
-      <Button variant="outline" onClick={() => handleNavigationDay(-1)}>
+      <NavigationButton tooltipText="Dia anterior" onClick={() => handleNavigationDay(-1)}>
         <ChevronLeft size={16} />
-      </Button>
+      </NavigationButton>
 
       <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
         <PopoverTrigger asChild>
@@ -86,9 +87,9 @@ export function DatePicker() {
         </PopoverContent>
       </Popover>
 
-      <Button variant="outline" onClick={() => handleNavigationDay(1)}>
+      <NavigationButton tooltipText="Próximo dia" onClick={() => handleNavigationDay(1)}>
         <ChevronRight size={16} />
-      </Button>
+      </NavigationButton>
 
     </div>
   );
