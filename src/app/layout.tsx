@@ -1,3 +1,4 @@
+import { Header } from "@/components/header/header";
 import "@/styles/globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -24,20 +25,13 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="pt-BR">
       <body className={`${inter.variable} ${interTight.variable}  antialiased`}>
-        {children}
-        <ToastContainer
-          position="top-right"
-          autoClose={5000}
-          hideProgressBar={false}
-          newestOnTop={true}
-          closeOnClick={true}
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="dark"
-          
-        />
+        <div className="max-w-3xl mx-auto">
+          <Header />
+          <main className="flex flex-col flex-1 mt-12">
+            {children}
+            <ToastContainer position="top-right" autoClose={5000} hideProgressBar={false} newestOnTop={true} closeOnClick={true} rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="dark" />
+          </main>
+        </div>
       </body>
     </html>
   );

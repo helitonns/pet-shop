@@ -43,14 +43,16 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ d
         ))}
       </div>
 
-      <div className="
-        fixed bottom-0 left-0 right-0 flex justify-center bg-background-tertiary py-4.5 px-6
-        md:botton-6 md:right-6 md:left-auto md:top-auto md:w-auto md:bg-transparent md:p-0 md:mt-4 md:mb-4"
-      >
-        <AppointmentForm>
-          <Button variant="brand">Novo Agendamento</Button>
-        </AppointmentForm>
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-background-tertiary/50 backdrop-blur supports-backdrop-filter:bg-background/60 md:bg-transparent">
+        <div className="max-w-3xl mx-auto">
+          <div className="w-full flex items-center justify-center p-4 md:justify-end">
+            <AppointmentForm>
+              <Button variant="brand">Novo Agendamento</Button>
+            </AppointmentForm>
+          </div>
+        </div>
       </div>
+
     </div>
   );
 }
